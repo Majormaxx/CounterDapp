@@ -1,22 +1,26 @@
 import React from 'react';
+import { toast } from 'react-toastify';
+import { CiCirclePlus } from 'react-icons/ci';
 
 function IncreaseButton({ contract, updateCount }) {
   const handleIncrement = async () => {
     try {
       const tx = await contract.increment();
-      await tx.wait(); // Wait for transaction confirmation
-      if (updateCount) updateCount();
+      await tx.wait();
+      await updateCount();
+      toast.success('Count incremented!');
     } catch (error) {
       console.error('Error incrementing:', error);
-      alert('Failed to increment. Only the owner can call this function.');
+      toast.error(`Error: ${error.message}`);
     }
   };
 
   return (
     <button
-      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
       onClick={handleIncrement}
+      className="flex items-center justify-center w-full px-4 py-2 text-white bg-green-500 rounded-full hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400"
     >
+      <CiCirclePlus className="w-6 h-6 mr-2" />
       Increment
     </button>
   );
